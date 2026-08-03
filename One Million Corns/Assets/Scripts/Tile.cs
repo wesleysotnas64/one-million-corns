@@ -8,7 +8,7 @@ public class Tile : MonoBehaviour
     private int xIndex;
     private int yIndex;
 
-    public TileState currentState { get; private set; } = TileState.Plowed; // Estado inicial do Tile
+    public TileState currentState { get; private set; } = TileState.Raw; // Estado inicial do Tile
 
     void Awake()
     {
@@ -76,5 +76,10 @@ public class Tile : MonoBehaviour
     public void SetOccupied(bool occupied)
     {
         isOccupied = occupied;
+    }
+
+    void OnMouseDown()
+    {
+        ToolsManager.Instance.TileInteraction(this);
     }
 }
