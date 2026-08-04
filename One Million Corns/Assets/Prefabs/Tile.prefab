@@ -51,6 +51,8 @@ MonoBehaviour:
   - {fileID: 805789421, guid: 41416b8ae25b63c4080d768052738d4d, type: 3}
   - {fileID: 2018221964, guid: 41416b8ae25b63c4080d768052738d4d, type: 3}
   - {fileID: -617697570, guid: 41416b8ae25b63c4080d768052738d4d, type: 3}
+  cornstalkPrefab: {fileID: 3178326685878961347, guid: abe39e36fe0a8ab43b7ef661c8eb412f, type: 3}
+  cornstalkScript: {fileID: 0}
 --- !u!212 &6210970623853975007
 SpriteRenderer:
   serializedVersion: 2

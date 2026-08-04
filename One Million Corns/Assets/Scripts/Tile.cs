@@ -9,6 +9,9 @@ public class Tile : MonoBehaviour
     private int yIndex;
     public TileState currentState { get; private set; } = TileState.Raw0;
 
+    [SerializeField] private GameObject cornstalkPrefab;
+    [SerializeField] private Cornstalk cornstalkScript;
+
     void Awake()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
@@ -87,9 +90,20 @@ public class Tile : MonoBehaviour
                         Plow();
                     }
                     break;
-                case ToolType.Selection:
-                    // Implementar lógica de seleção, se necessário
+                
+                case ToolType.Seed:
+                    if (IsPlowed && !isOccupied)
+                    {
+                        GameObject cornstalkInstance = Instantiate(cornstalkPrefab, transform.position, Quaternion.identity);
+                        cornstalkScript = cornstalkInstance.GetComponent<Cornstalk>();
+                        if (cornstalkScript != null)
+                        {
+                            cornstalkScript.SetState(CornstalkState.Seed);
+                            SetOccupied(true);
+                        }
+                    }
                     break;
+
                 default:
                     break;
                 

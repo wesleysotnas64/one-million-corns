@@ -9,7 +9,7 @@ public class Cornstalk : MonoBehaviour
 
     private SpriteRenderer _spriteRenderer;
 
-    void Start()
+    void Awake()
     {
         _spriteRenderer = GetComponent<SpriteRenderer>();
     }
@@ -68,7 +68,7 @@ public class Cornstalk : MonoBehaviour
         switch (_state)
         {
             case CornstalkState.Seed:
-                _spriteRenderer.sprite = null; // Example sprite for Seed
+                _spriteRenderer.sprite = _sprites[0]; // Example sprite for Seed
                 break;
             case CornstalkState.Germination:
                 _spriteRenderer.sprite = _sprites[1]; // Example sprite for Germination
@@ -90,6 +90,5 @@ public class Cornstalk : MonoBehaviour
                 break;
         }
     }
-
     
 }
