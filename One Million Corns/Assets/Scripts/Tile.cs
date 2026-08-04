@@ -4,11 +4,10 @@ public class Tile : MonoBehaviour
 {
     private bool isOccupied = false;
     private SpriteRenderer spriteRenderer;
-
+    [SerializeField] private Sprite[] _sprites;
     private int xIndex;
     private int yIndex;
-
-    public TileState currentState { get; private set; } = TileState.Raw; // Estado inicial do Tile
+    public TileState currentState { get; private set; } = TileState.Raw0;
 
     void Awake()
     {
@@ -19,58 +18,56 @@ public class Tile : MonoBehaviour
     {
         xIndex = x;
         yIndex = y;
+
+        bool isEven = (xIndex + yIndex) % 2 == 0;
+        currentState = isEven ? TileState.Raw0 : TileState.Raw1;
+
         UpdateVisual();
     }
 
-    // Altera o estado do solo (ex: quando o jogador usa o Ciscador)
+    // Método para Arar o terreno (preserva a variação xadrez)
+    public void Plow()
+    {
+        if (currentState == TileState.Raw0)
+            SetState(TileState.Plowed0);
+        else if (currentState == TileState.Raw1)
+            SetState(TileState.Plowed1);
+    }
+
+    // Método para Limpar/Resetar o terreno de volta para a Grama (preserva a variação xadrez)
+    public void ResetToRaw()
+    {
+        if (currentState == TileState.Plowed0)
+            SetState(TileState.Raw0);
+        else if (currentState == TileState.Plowed1)
+            SetState(TileState.Raw1);
+    }
+
+    // Altera o estado diretamente se necessário
     public void SetState(TileState newState)
     {
         currentState = newState;
         UpdateVisual();
     }
 
-    // Atualiza a cor dependendo do estado atual e da posição no padrão xadrez
+    // Atualiza o sprite atribuído ao SpriteRenderer com base no enum
     private void UpdateVisual()
     {
-        bool isEven = (xIndex + yIndex) % 2 == 0;
-
-        switch (currentState)
+        if (_sprites == null || _sprites.Length < 4)
         {
-            case TileState.Raw:
-                if (isEven) SetColorRawLight();
-                else SetColorRawDark();
-                break;
-
-            case TileState.Plowed:
-                if (isEven) SetColorPlowedLight();
-                else SetColorPlowedDark();
-                break;
+            Debug.LogWarning($"[Tile] Array _sprites não está configurado corretamente em {gameObject.name}");
+            return;
         }
+
+        // Mapeia o enum diretamente para o índice do array de sprites
+        int spriteIndex = (int)currentState;
+        spriteRenderer.sprite = _sprites[spriteIndex];
     }
 
-    // Cores de Terreno (Grama)
-    public void SetColorRawLight()
-    {
-        spriteRenderer.color = new Color(0.25f, 0.80f, 0.35f);
-    }
+    // Helper para verificar se o terreno está arado
+    public bool IsPlowed => currentState == TileState.Plowed0 || currentState == TileState.Plowed1;
 
-    public void SetColorRawDark()
-    {
-        spriteRenderer.color = new Color(0.15f, 0.60f, 0.25f);
-    }
-
-    // Cores de Terreno (Arado)
-    public void SetColorPlowedLight()
-    {
-        spriteRenderer.color = new Color(0.55f, 0.35f, 0.18f);
-    }
-
-    public void SetColorPlowedDark()
-    {
-        spriteRenderer.color = new Color(0.42f, 0.25f, 0.10f);
-    }
-
-    // Getters e Setters
+    // Getters e Setters de ocupação
     public bool IsOccupied => isOccupied;
 
     public void SetOccupied(bool occupied)
@@ -80,6 +77,23 @@ public class Tile : MonoBehaviour
 
     void OnMouseDown()
     {
-        ToolsManager.Instance.TileInteraction(this);
+        if (ToolsManager.Instance != null)
+        {
+            switch (ToolsManager.Instance.CurrentTool)
+            {
+                case ToolType.Hoe:
+                    if (!isOccupied)
+                    {
+                        Plow();
+                    }
+                    break;
+                case ToolType.Selection:
+                    // Implementar lógica de seleção, se necessário
+                    break;
+                default:
+                    break;
+                
+            }
+        }
     }
 }

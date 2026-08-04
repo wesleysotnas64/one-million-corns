@@ -23,6 +23,10 @@ public class ToolsManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Q)) SetCurrentTool(ToolType.Selection);
         if (Input.GetKeyDown(KeyCode.W)) SetCurrentTool(ToolType.Hoe);
+        if (Input.GetKeyDown(KeyCode.E)) SetCurrentTool(ToolType.Seed);
+        if (Input.GetKeyDown(KeyCode.R)) SetCurrentTool(ToolType.WateringCan);
+        if (Input.GetKeyDown(KeyCode.A)) SetCurrentTool(ToolType.Glove);
+        if (Input.GetKeyDown(KeyCode.S)) SetCurrentTool(ToolType.Sickle);
     }
 
     public void SetCurrentTool(ToolType newTool)
@@ -30,23 +34,4 @@ public class ToolsManager : MonoBehaviour
         currentTool = newTool;
     }
 
-    public void TileInteraction(Tile tile)
-    {
-        switch (currentTool)
-        {
-            case ToolType.Selection:
-                // Implementar lógica de seleção, se necessário
-                break;
-
-            case ToolType.Hoe:
-                if (tile.currentState == TileState.Raw)
-                {
-                    tile.SetState(TileState.Plowed);
-                }
-                break;
-            
-            default:
-                break;
-        }
-    }
 }
